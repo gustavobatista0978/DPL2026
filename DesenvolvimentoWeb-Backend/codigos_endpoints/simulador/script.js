@@ -1,22 +1,31 @@
 const http = require('http');
-const fs = require('fs');
 
 const servidor = http.createServer((req, res) => {
-    if (req.url === '/login'){
-        res.writeHead(200, {'Content-Type': 'text/plain; charset=utf-8'});
-        res.end('Login realizado com sucesso!');
-    }
-    else if (req.url === '/dashboard'){
-        res.writeHead(401, {'Content-Type': 'text/plain; charset=utf-8'});
-        res.end('Acesso negado. Faça login primeiro');
-    }
-    else if (req.url === '/admin'){
-        res.writeHead(403, {'Content-Type': 'text/plain; charset=utf-8'});
-        res.end('Você não tem permissão para acessar esta área.');
-    }
+    if (req.url.startsWith('/identificar')) {
+        const partesUrl = req.url.split('?');
+        const queryString = partesUrl[1];
+
+        let nomeDoUsuario = '';
+
+        if (queryString) {
+            const parametros = queryString.split('=');
+            
+            if (parametros[0] === 'nome') {
+                nomeDoUsuario = decodeURIComponent(parametros[1]);
+            }
+        }
+
+        if (nomeDoUsuario) {
+            res.writeHead(200, {'Content-Type': 'text/plain; charset=utf-8'});
+            res.end(`Nome recebido: ${nomeDoUsuario}`);
+        } else {
+            res.writeHead(400, {'Content-Type': 'text/plain; charset=utf-8'});
+            res.end('Por favor, informe o nome na URL. Exemplo: /identificar?nome=SeuNome');
+        }
+    } 
     else {
         res.writeHead(404, {'Content-Type': 'text/plain; charset=utf-8'});
-        res.end('Página não encontrada');
+        res.end('Página não encontrada. Acesse /identificar?nome=SeuNome');
     }
 });
 

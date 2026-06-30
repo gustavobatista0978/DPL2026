@@ -1,0 +1,1 @@
+Nao, o JSON é apenas i,a estrutua de texto puro.Ou seja os dados nele nao possuem proteçao

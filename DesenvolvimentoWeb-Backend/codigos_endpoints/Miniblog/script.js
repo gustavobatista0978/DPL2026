@@ -1,35 +1,20 @@
 const http = require('http');
-const fs = require('fs');
 
-const servidor = http.createServer((req, res) => {
-    if (req.url === '/'){
-       fs.readFile('index.html', (erro, dados) => {
-            res.writeHead(200, {'Content-Type': 'text/html'});
-            res.end(dados);
-        });
+const server = http.createServer((req, res) => {
+
+    const urlParams = new URL(req.url, 'http://localhost:3000');
+    const endpoint = urlParams.pathname;
+
+    if (endpoint === '/nome') {
+
+        const nome = urlParams.searchParams.get('nome') || 'visitante';
+
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end(`Olá, ${nome}!`);
     }
-    else if (req.url === '/post1'){
-        fs.readFile('post1.html', (erro, dados) => {
-            res.writeHead(200, {'Content-Type': 'text/html'});
-            res.end(dados);
-        });
-    }
-    else if (req.url === '/post2'){
-        fs.readFile('post2.html', (erro, dados) => {
-            res.writeHead(200, {'Content-Type': 'text/html'});
-            res.end(dados);
-        });
-    }
-    else {
-        fs.readFile('erro.html', (erro, data) => {
-           res.writeHead(404, {'Content-Type': 'text/html; charset=utf-8'});
-              res.end(data);
-        });
-    }
+
 });
 
-const porta = 3000;
-
-servidor.listen(porta, () => {
-    console.log(`Servidor rodando em http://localhost:${porta}`);
+server.listen(3000, () => {
+    console.log('Servidor rodando na porta 3000');
 });
